@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>选择房间</title>
+<link rel="stylesheet" type="text/css" href="Reg.css"/>
+</head>
+<body>
+        <h1>Room<h1>
+        <div style="width: 20% ; text-align: center;float:left ;height:250px">
+            <img id='room_0' width="100%" src="/img/img.jpeg" >
+            <label id="room_lable_0">有人</label>
+        </div>
+        <div style="width: 50px; height: 250px; float:left">
+        </div>
+        <div style="width: 20% ; text-align: center;float:left ;height:250px">
+            <img id='room_1' width="100%" src="/img/img.jpeg" >
+            <label id="room_lable_1">无人</label>
+        </div>
+        <div style="width: 50px; height: 250px; float:left"></div>
+        <div style="width: 20% ; text-align: center;float:left ;height:250px">
+            <img id='room_2' width="100%" src="/img/img.jpeg" >
+            <label id="room_lable_2">无人</label>
+        </div>
+        <div style="width: 50px; height: 250px; float:left"></div>
+        <div style="width: 20% ; text-align: center;float:left ;height:250px">
+            <img id='room_3' width="100%" src="/img/img.jpeg" >
+            <label id="room_lable_3">无人</label>
+        </div>
+        <div style="width: 50px; height: 250px; float:left"></div>
+        <div style="width: 20% ; text-align: center;float:left ;height:250px">
+            <img id='room_4' width="100%" src="/img/img.jpeg" >
+            <label id="room_lable_4">无人</label>
+        </div>
+        <div style="width: 50px; height: 250px; float:left"></div>
+        <div style="width: 20% ; text-align: center;float:left ;height:250px">
+            <img id='room_5' width="100%" src="/img/img.jpeg" >
+            <label id="room_lable_5">有人</label>
+        </div>
+        <div style="width: 50px; height: 250px; float:left"></div>
+        <div style="width: 20% ; text-align: center;float:left ;height:250px">
+            <img id='room_6' width="100%" src="/img/img.jpeg" >
+            <label id="room_lable_6">有人</label>
+        </div>
+        <div style="width: 50px; height: 250px; float:left"></div>
+        <div style="width: 20% ; text-align: center;float:left ;height:250px">
+            <img id='room_7' width="100%" src="/img/img.jpeg" >
+            <label id="room_lable_7">有人</label>
+        </div>
+    <script src="./Javascripts/jquery-3.3.1.js"></script>
+    <script>
+        let roomtf = [];
+            $.post('./main',{},res=>{
+                if(res.code!==0){
+                    alert("请先登录！");
+                    window.location = './login';
+                }else{
+                    if(res.data.roomtf){
+                        roomtf = res.data.roomtf;
+                    }
+                    if(roomtf[0]===true||roomtf[0]===false){
+                        for(let i=0;i<8;i++){
+                            if(roomtf[i]===true){
+                                if(res.data.roomid===`${i}`){
+                                    $(`#room_lable_${i}`).text("我");
+                                }else{
+                                    $(`#room_lable_${i}`).text("有人");
+                                }
+                            }else{
+                                $(`#room_lable_${i}`).text("无人");
+                            }
+                        }
+                    }
+                    for(let i=0;i<8;i++){
+                        const room=$(`#room_${i}`);
+                        const text = $(`#room_lable_${i}`);
+                        if(text.text()==="无人"){
+                            roomtf[i] = false;
+                        }else{
+                            roomtf[i] = true;
+                        }
+                        room.on('click',()=>{
+                            if(roomtf[i]===true&&text.text()!=="我"){
+                                alert("已有人，不能再进!")
+                            }else{
+                                if(text.text()==="我"){
+                                    alert("进入房间!");//进入房间
+                                    window.location.href="http://localhost:3000";
+                                }else{
+                                    roomtf[i] = true;
+                                    $.post('/game/room',{roomtfarr:roomtf,roomid:i},function(res){
+                                        console.log(res)
+                                        if(res.code===0){
+                                            text.text("我");
+                                            alert(res.msg);//进入房间
+                                            window.location.href="http://localhost:3000";
+                                        }else{
+                                            roomtf[i] = false;
+                                            alert(res.msg);//退出房间
+                                            return
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+      </script>
+</body>
+</html>
+

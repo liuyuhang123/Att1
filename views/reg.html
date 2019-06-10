@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>注册</title>
+<link rel="stylesheet" type="text/css" href="Reg.css"/> 
+<style type="text/css">
+</style>
+</head>
+
+<body>
+    <p id="register">
+        <h1>Register<h1>
+        <form action="./reg_do.php" method="post" enctype="multipart/form-data" class="form">                     
+            <input type="text" id="username" name="username" list="username" required="required" placeholder="用户名" class="input1"><br>
+            <input type="password" id="password" name="password" required="required" placeholder="密码" class="input1"><br>
+            <input type="password" id="repassword" name="repassword" required="required" placeholder="确认密码" class="input1"><br>
+            <!-- <input type="submit" name="reg" id="reg" value="提交" class="input2"> -->
+            <input type="button" name="reg" id="reg" value="注册" class="input2">
+            <input type="reset" value="重置" class="input2"><br>
+            已有账号，请<a href="http://localhost:3000/login">登录</a>
+        </form>
+    </p>
+    <script src="./Javascripts/jquery-3.3.1.js"></script>
+    <script>
+        const regName = /^[a-zA-Z]\w{3,}///正则表达式
+            $('#reg').on('click',()=>{
+                if($('#username').val()===''||$('#repassword').val()===''||$('#repassword').val()===''){
+                    alert('注册信息不全!')
+                    return
+                }
+                if(!regName.test($('#username').val())){
+                    alert('用户名不合法!')
+                    return
+                }
+                    $.post('/reg',{
+                        username:$('#username').val(),
+                        password:$('#password').val(),
+                        repassword:$('#repassword').val()
+                    },function(res){
+                        alert(res.msg)
+                        if(res.err===1){
+                            return
+                        }
+                        window.location.href="http://localhost:3000/login"
+                    });
+            });//注册
+      </script>
+</body>
+</html>
